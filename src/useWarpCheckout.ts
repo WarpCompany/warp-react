@@ -8,10 +8,10 @@ import {
   type CheckoutTheme,
   type WarpCheckoutError,
 } from '@usewarp/js'
-import { useLatest, type WarpCheckoutCallbacks } from './callbacks'
+import { useLatest, type WarpCheckoutCallbacks, type WarpModalCallbacks } from './callbacks'
 import { toCheckoutError } from './errors'
 
-export interface UseWarpCheckoutOptions extends WarpCheckoutCallbacks {
+export interface UseWarpCheckoutOptions extends WarpCheckoutCallbacks, WarpModalCallbacks {
   /** `checkout_url` of a session created on your server. */
   checkoutUrl?: string
   /** Called on each open when `checkoutUrl` is not set. Creates a session on your server and returns its `checkout_url`. */
@@ -33,7 +33,7 @@ export interface UseWarpCheckoutResult {
   status: CheckoutStatus | null
   /** Session id (`ps_...`) of the open checkout, or `null`. */
   sessionId: string | null
-  /** `true` from the moment the modal or popup is opened until the customer cancels or returns, `close()` is called, or opening fails. */
+  /** `true` from the moment the modal or popup is opened until it closes (for any reason, including after a completed payment), `close()` is called, or opening fails. */
   isOpen: boolean
   /** `true` while the checkout URL is being fetched and the modal or popup is opening. */
   isLoading: boolean
@@ -92,7 +92,7 @@ export function useWarpCheckout(options: UseWarpCheckoutOptions = {}): UseWarpCh
         latest.current.onError?.(checkoutError)
       }
 
-      // The checkout has closed itself (cancel, return or modal dismissed): release it and update state.
+      // The modal or popup has closed itself (dismissed, or after cancel / return): release it and update state.
       const finish = () => {
         if (!isCurrent()) return false
         current.current = null
@@ -118,10 +118,14 @@ export function useWarpCheckout(options: UseWarpCheckoutOptions = {}): UseWarpCh
           if (isCurrent()) latest.current.onComplete?.()
         },
         onCancel: () => {
-          if (finish()) latest.current.onCancel?.()
+          if (isCurrent()) latest.current.onCancel?.()
         },
         onReturn: () => {
-          if (finish()) latest.current.onReturn?.()
+          if (isCurrent()) latest.current.onReturn?.()
+        },
+        // Fired by @usewarp/js after onCancel / onReturn, and whenever the customer closes the modal or popup.
+        onClose: () => {
+          if (finish()) latest.current.onClose?.()
         },
         onError: reportError,
         signal: session.abort.signal,

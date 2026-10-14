@@ -48,22 +48,95 @@ describe('useWarpCheckout', () => {
   })
 
   it('closes when the customer cancels or returns', async () => {
-    const onCancel = vi.fn()
-    const onReturn = vi.fn()
-    const { result } = renderHook(() => useWarpCheckout({ checkoutUrl: CHECKOUT_URL, onCancel, onReturn }))
+    const events: string[] = []
+    const { result } = renderHook(() =>
+      useWarpCheckout({
+        checkoutUrl: CHECKOUT_URL,
+        onCancel: () => events.push('cancel'),
+        onReturn: () => events.push('return'),
+        onClose: () => events.push('close'),
+      }),
+    )
 
+    // @usewarp/js calls onCancel, then onClose once the modal has closed itself.
     await act(() => result.current.openModal())
     act(() => calls.modal[0]!.options.onCancel?.())
+    expect(result.current.isOpen).toBe(true)
+    act(() => calls.modal[0]!.options.onClose?.())
     expect(result.current.isOpen).toBe(false)
-    expect(onCancel).toHaveBeenCalledTimes(1)
+    expect(calls.modal[0]!.destroy).toHaveBeenCalledTimes(1)
 
     await act(() => result.current.openModal())
     act(() => {
       calls.modal[1]!.options.onStatus?.('completed')
       calls.modal[1]!.options.onReturn?.()
+      calls.modal[1]!.options.onClose?.()
     })
     expect(result.current).toMatchObject({ isOpen: false, status: 'completed' })
-    expect(onReturn).toHaveBeenCalledTimes(1)
+    expect(events).toEqual(['cancel', 'close', 'return', 'close'])
+  })
+
+  it('sets isOpen to false when the customer closes the modal after paying', async () => {
+    const onCancel = vi.fn()
+    const onClose = vi.fn()
+    const { result } = renderHook(() => useWarpCheckout({ checkoutUrl: CHECKOUT_URL, onCancel, onClose }))
+
+    await act(() => result.current.openModal())
+    act(() => {
+      calls.modal[0]!.options.onStatus?.('completed')
+      calls.modal[0]!.options.onComplete?.()
+    })
+    expect(result.current.isOpen).toBe(true)
+    act(() => calls.modal[0]!.options.onClose?.())
+    expect(result.current).toMatchObject({ isOpen: false, isLoading: false, status: 'completed' })
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(onCancel).not.toHaveBeenCalled()
+  })
+
+  it('sets isOpen to false when the popup window is closed', async () => {
+    const onClose = vi.fn()
+    const { result } = renderHook(() => useWarpCheckout({ checkoutUrl: CHECKOUT_URL, onClose }))
+
+    await act(() => result.current.openPopup())
+    expect(result.current.isOpen).toBe(true)
+    act(() => calls.popup[0]!.options.onClose?.())
+    expect(result.current.isOpen).toBe(false)
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('sets isOpen to false when the modal is dismissed while still loading', async () => {
+    let release: (url: string) => void = () => {}
+    const fetchCheckoutUrl = () => new Promise<string>((resolve) => (release = resolve))
+    const onError = vi.fn()
+    const { result } = renderHook(() => useWarpCheckout({ fetchCheckoutUrl, onError }))
+
+    act(() => {
+      void result.current.openModal()
+    })
+    expect(result.current).toMatchObject({ isOpen: true, isLoading: true })
+    act(() => modal.mock.calls[0]![0].onClose?.())
+    expect(result.current).toMatchObject({ isOpen: false, isLoading: false })
+    await act(async () => {
+      release(CHECKOUT_URL)
+      await flush()
+    })
+    expect(calls.modal[0]!.destroy).toHaveBeenCalledTimes(1)
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it('ignores onClose from a checkout that was already replaced or closed', async () => {
+    const onClose = vi.fn()
+    const { result } = renderHook(() => useWarpCheckout({ checkoutUrl: CHECKOUT_URL, onClose }))
+
+    await act(() => result.current.openModal())
+    await act(() => result.current.openModal())
+    act(() => calls.modal[0]!.options.onClose?.())
+    expect(result.current.isOpen).toBe(true)
+    expect(onClose).not.toHaveBeenCalled()
+
+    act(() => result.current.close())
+    act(() => calls.modal[1]!.options.onClose?.())
+    expect(onClose).not.toHaveBeenCalled()
   })
 
   it('close() destroys the open checkout', async () => {

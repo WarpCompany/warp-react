@@ -1,15 +1,18 @@
 import { useState, type ButtonHTMLAttributes, type MouseEvent, type ReactNode } from 'react'
 import { parseCheckoutUrl, type CheckoutTheme } from '@usewarp/js'
-import { useLatest, type WarpCheckoutCallbacks } from './callbacks'
+import { useLatest, type WarpCheckoutCallbacks, type WarpModalCallbacks } from './callbacks'
 import { toCheckoutError } from './errors'
 import { navigateTo } from './navigate'
 import { useWarpCheckout } from './useWarpCheckout'
 
 export type PayWithWarpMode = 'modal' | 'popup' | 'redirect'
 
-type NativeButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof WarpCheckoutCallbacks | 'children'>
+type NativeButtonProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  keyof WarpCheckoutCallbacks | keyof WarpModalCallbacks | 'children'
+>
 
-export interface PayWithWarpButtonProps extends WarpCheckoutCallbacks, NativeButtonProps {
+export interface PayWithWarpButtonProps extends WarpCheckoutCallbacks, WarpModalCallbacks, NativeButtonProps {
   /** Creates a session on your server and returns its `checkout_url`. Called on each click. */
   fetchCheckoutUrl: () => Promise<string>
   /** `modal` (default) opens an overlay, `popup` a new window, `redirect` navigates to the hosted checkout. */
@@ -35,6 +38,7 @@ export function PayWithWarpButton(props: PayWithWarpButtonProps) {
     onCancel,
     onReturn,
     onError,
+    onClose,
     children,
     onClick,
     disabled,
@@ -53,6 +57,7 @@ export function PayWithWarpButton(props: PayWithWarpButtonProps) {
     onCancel,
     onReturn,
     onError,
+    onClose,
   })
   const [redirecting, setRedirecting] = useState(false)
 

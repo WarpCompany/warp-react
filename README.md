@@ -106,7 +106,7 @@ export function Checkout({ orderId }: { orderId: string }) {
 
 ### Modal
 
-`<PayWithWarpButton>` creates the session when clicked and opens the checkout in a full-screen modal. The modal closes on Escape, the backdrop or the close button (calling `onCancel`), and after the customer returns from the success page. The button is disabled and `aria-busy` while the checkout is loading.
+`<PayWithWarpButton>` creates the session when clicked and opens the checkout in a full-screen modal. The modal closes on Escape, the backdrop or the close button (calling `onCancel` if the payment has not completed), and after the customer cancels or returns from the success page. Every time it closes, `onClose` is called last. The button is disabled and `aria-busy` while the checkout is loading.
 
 ```tsx
 'use client'
@@ -169,7 +169,7 @@ export function CustomCheckout({ orderId }: { orderId: string }) {
 }
 ```
 
-Call `openPopup` directly in the click handler, without awaiting anything first, so the browser allows the window. The returned functions are stable and always use the latest options. `isOpen` becomes `false` on cancel, on return, on `close()` and when opening fails. Opening again closes the previous checkout, and unmounting the component closes it too.
+Call `openPopup` directly in the click handler, without awaiting anything first, so the browser allows the window. The returned functions are stable and always use the latest options. `isOpen` becomes `false` whenever the modal or popup closes (including when the customer closes it after paying, which also calls `onClose`), on `close()` and when opening fails. Opening again closes the previous checkout, and unmounting the component closes it too.
 
 ### Allowed origins
 
@@ -209,9 +209,13 @@ Events from the checkout (`onStatus`, `onComplete`, `onCancel`, `onReturn`) are 
 | `onError` | `(error: WarpCheckoutError) => void` | Loading the checkout failed |
 | `className`, `style`, `id` | | Applied to the container element |
 
-`<PayWithWarpButton>` takes `fetchCheckoutUrl` (required), `mode` (`'modal'` by default, `'popup'` or `'redirect'`), `theme`, `checkoutOrigin`, the same callbacks, `children` and any `<button>` props.
+`<PayWithWarpButton>` takes `fetchCheckoutUrl` (required), `mode` (`'modal'` by default, `'popup'` or `'redirect'`), `theme`, `checkoutOrigin`, the same callbacks plus `onClose`, `children` and any `<button>` props.
 
-`useWarpCheckout(options)` takes `checkoutUrl` or `fetchCheckoutUrl`, `theme`, `checkoutOrigin` and the same callbacks.
+`useWarpCheckout(options)` takes `checkoutUrl` or `fetchCheckoutUrl`, `theme`, `checkoutOrigin`, the same callbacks plus `onClose`.
+
+| Callback | Type | Description |
+| -------- | ---- | ----------- |
+| `onClose` | `() => void` | Modal and popup only. The checkout closed: dismissed by the customer (also after paying), or closed after `onCancel` / `onReturn`. Called last, once per open. Not called when you call `close()` |
 
 ## API
 

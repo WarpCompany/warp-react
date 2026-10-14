@@ -67,6 +67,31 @@ describe('PayWithWarpButton', () => {
     expect(onComplete).toHaveBeenCalledTimes(1)
   })
 
+  it('forwards onClose and can be clicked again once the modal closes', async () => {
+    const onClose = vi.fn()
+    const onCancel = vi.fn()
+    render(<PayWithWarpButton fetchCheckoutUrl={async () => CHECKOUT_URL} onClose={onClose} onCancel={onCancel} />)
+    const button = screen.getByRole('button') as HTMLButtonElement
+
+    await act(async () => {
+      fireEvent.click(button)
+      await flush()
+    })
+    act(() => {
+      calls.modal[0]!.options.onComplete?.()
+      calls.modal[0]!.options.onClose?.()
+    })
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(onCancel).not.toHaveBeenCalled()
+    expect(calls.modal[0]!.destroy).toHaveBeenCalledTimes(1)
+
+    await act(async () => {
+      fireEvent.click(button)
+      await flush()
+    })
+    expect(modal).toHaveBeenCalledTimes(2)
+  })
+
   it('opens a popup synchronously within the click', () => {
     render(<PayWithWarpButton mode="popup" fetchCheckoutUrl={async () => CHECKOUT_URL} />)
     fireEvent.click(screen.getByRole('button'))
