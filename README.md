@@ -249,8 +249,6 @@ npm test
 npm run build
 ```
 
-Until `@warpfi/js` is published to npm, clone [warp-js](https://github.com/WarpCompany/warp-js) next to this repository, build it, and install it with `npm install --no-save ../warp-js` instead of `npm install`.
-
 ## Project structure
 
 ```

@@ -16,28 +16,11 @@ jobs:
         node-version: [20, 22]
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: warp-react
-      # @warpfi/js is not on npm yet, so build it from source and install it without saving until it is published.
-      - uses: actions/checkout@v4
-        with:
-          repository: WarpCompany/warp-js
-          path: warp-js
-          token: ${{ secrets.WARP_JS_TOKEN || github.token }}
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Build @warpfi/js
-        working-directory: warp-js
-        run: |
-          npm ci
-          npm run build
-      - name: Install dependencies
-        working-directory: warp-react
-        run: npm install --no-save ../warp-js
+          cache: npm
+      - run: npm ci
       - run: npm run lint
-        working-directory: warp-react
       - run: npm test
-        working-directory: warp-react
       - run: npm run build
-        working-directory: warp-react
