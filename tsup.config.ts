@@ -9,7 +9,7 @@ export default defineConfig({
   target: 'es2020',
   platform: 'browser',
   splitting: false,
-  external: ['react', 'react-dom', 'react/jsx-runtime', '@usewarp/js'],
+  external: ['react', 'react-dom', 'react/jsx-runtime', '@warpfi/js'],
   // Marks the bundle as a client module for React Server Components (Next.js App Router).
   banner: { js: '"use client";' },
 })

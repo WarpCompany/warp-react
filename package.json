@@ -1,5 +1,5 @@
 {
-  "name": "@usewarp/react",
+  "name": "@warpfi/react",
   "version": "0.1.0",
   "description": "React components and hooks for the Pay with Warp embedded checkout.",
   "keywords": [
@@ -14,7 +14,10 @@
   "license": "MIT",
   "author": "Warp Labs",
   "homepage": "https://developer.usewarp.net",
-  "repository": "github:WarpCompany/warp-react",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WarpCompany/warp-react.git"
+  },
   "bugs": "https://github.com/WarpCompany/warp-react/issues",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -44,7 +47,7 @@
     "prepublishOnly": "npm run lint && npm test && npm run build"
   },
   "dependencies": {
-    "@usewarp/js": "^0.1.0"
+    "@warpfi/js": "^0.1.0"
   },
   "peerDependencies": {
     "react": ">=18",

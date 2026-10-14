@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in @usewarp/react.
+Thanks for your interest in @warpfi/react.
 
 ## Development
 

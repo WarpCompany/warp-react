@@ -1,5 +1,5 @@
 import { vi } from 'vitest'
-import type { CheckoutInstance, CheckoutOptions } from '@usewarp/js'
+import type { CheckoutInstance, CheckoutOptions } from '@warpfi/js'
 
 export const SESSION_ID = 'ps_0123456789abcdef0123456789abcdef'
 export const CHECKOUT_URL = `https://checkout.usewarp.net/session/${SESSION_ID}`

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useEffect, useRef, type MutableRefObject } from 'react'
-import type { CheckoutStatus, WarpCheckoutError } from '@usewarp/js'
+import type { CheckoutStatus, WarpCheckoutError } from '@warpfi/js'
 
 /** Event callbacks shared by every component and hook in this package. */
 export interface WarpCheckoutCallbacks {

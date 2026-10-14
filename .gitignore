@@ -4,5 +4,5 @@ coverage
 .env*
 *.log
 .DS_Store
-# Not committed until @usewarp/js is published to npm
+# Not committed until @warpfi/js is published to npm
 package-lock.json

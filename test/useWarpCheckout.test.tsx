@@ -1,10 +1,10 @@
 import { act, cleanup, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { openCheckoutModal, openCheckoutPopup, WarpCheckoutError } from '@usewarp/js'
+import { openCheckoutModal, openCheckoutPopup, WarpCheckoutError } from '@warpfi/js'
 import { useWarpCheckout } from '../src'
 import { CHECKOUT_URL, SESSION_ID, calls, flush } from './mockWarpJs'
 
-vi.mock('@usewarp/js', async () => (await import('./mockWarpJs')).createWarpJsMock())
+vi.mock('@warpfi/js', async () => (await import('./mockWarpJs')).createWarpJsMock())
 
 const modal = vi.mocked(openCheckoutModal)
 const popup = vi.mocked(openCheckoutPopup)
@@ -58,7 +58,7 @@ describe('useWarpCheckout', () => {
       }),
     )
 
-    // @usewarp/js calls onCancel, then onClose once the modal has closed itself.
+    // @warpfi/js calls onCancel, then onClose once the modal has closed itself.
     await act(() => result.current.openModal())
     act(() => calls.modal[0]!.options.onCancel?.())
     expect(result.current.isOpen).toBe(true)

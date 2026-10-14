@@ -7,7 +7,7 @@ import {
   type CheckoutStatus,
   type CheckoutTheme,
   type WarpCheckoutError,
-} from '@usewarp/js'
+} from '@warpfi/js'
 import { useLatest, type WarpCheckoutCallbacks, type WarpModalCallbacks } from './callbacks'
 import { toCheckoutError } from './errors'
 
@@ -123,7 +123,7 @@ export function useWarpCheckout(options: UseWarpCheckoutOptions = {}): UseWarpCh
         onReturn: () => {
           if (isCurrent()) latest.current.onReturn?.()
         },
-        // Fired by @usewarp/js after onCancel / onReturn, and whenever the customer closes the modal or popup.
+        // Fired by @warpfi/js after onCancel / onReturn, and whenever the customer closes the modal or popup.
         onClose: () => {
           if (finish()) latest.current.onClose?.()
         },

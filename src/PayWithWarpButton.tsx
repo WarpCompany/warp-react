@@ -1,5 +1,5 @@
 import { useState, type ButtonHTMLAttributes, type MouseEvent, type ReactNode } from 'react'
-import { parseCheckoutUrl, type CheckoutTheme } from '@usewarp/js'
+import { parseCheckoutUrl, type CheckoutTheme } from '@warpfi/js'
 import { useLatest, type WarpCheckoutCallbacks, type WarpModalCallbacks } from './callbacks'
 import { toCheckoutError } from './errors'
 import { navigateTo } from './navigate'

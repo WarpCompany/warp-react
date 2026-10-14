@@ -1,11 +1,11 @@
 import { StrictMode } from 'react'
 import { act, cleanup, render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { mountCheckout } from '@usewarp/js'
+import { mountCheckout } from '@warpfi/js'
 import { WarpCheckout } from '../src'
 import { CHECKOUT_URL, calls, flush } from './mockWarpJs'
 
-vi.mock('@usewarp/js', async () => (await import('./mockWarpJs')).createWarpJsMock())
+vi.mock('@warpfi/js', async () => (await import('./mockWarpJs')).createWarpJsMock())
 
 const mount = vi.mocked(mountCheckout)
 

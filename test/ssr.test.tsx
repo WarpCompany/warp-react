@@ -1,11 +1,11 @@
 // @vitest-environment node
 import { renderToString } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
-import { mountCheckout } from '@usewarp/js'
+import { mountCheckout } from '@warpfi/js'
 import { PayWithWarpButton, WarpCheckout } from '../src'
 import { CHECKOUT_URL } from './mockWarpJs'
 
-vi.mock('@usewarp/js', async () => (await import('./mockWarpJs')).createWarpJsMock())
+vi.mock('@warpfi/js', async () => (await import('./mockWarpJs')).createWarpJsMock())
 
 describe('server rendering', () => {
   it('renders without touching the DOM', () => {

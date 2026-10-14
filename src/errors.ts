@@ -1,4 +1,4 @@
-import { WarpCheckoutError } from '@usewarp/js'
+import { WarpCheckoutError } from '@warpfi/js'
 
 type ErrorCode = WarpCheckoutError['code']
 

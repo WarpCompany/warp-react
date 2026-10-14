@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: warp-react
-      # @usewarp/js is not on npm yet, so build it from source and install it without saving until it is published.
+      # @warpfi/js is not on npm yet, so build it from source and install it without saving until it is published.
       - uses: actions/checkout@v4
         with:
           repository: WarpCompany/warp-js
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Build @usewarp/js
+      - name: Build @warpfi/js
         working-directory: warp-js
         run: |
           npm ci

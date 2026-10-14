@@ -4,7 +4,7 @@ import {
   type CheckoutInstance,
   type CheckoutOptions,
   type CheckoutTheme,
-} from '@usewarp/js'
+} from '@warpfi/js'
 import { useLatest, type WarpCheckoutCallbacks } from './callbacks'
 import { toCheckoutError } from './errors'
 

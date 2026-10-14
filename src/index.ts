@@ -9,4 +9,4 @@ export {
   type CheckoutTheme,
   type CheckoutOptions,
   type CheckoutInstance,
-} from '@usewarp/js'
+} from '@warpfi/js'

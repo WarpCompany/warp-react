@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@usewarp/react"><img src="https://img.shields.io/npm/v/@usewarp/react?color=9E1FAA" alt="npm" /></a>
+  <a href="https://www.npmjs.com/package/@warpfi/react"><img src="https://img.shields.io/npm/v/@warpfi/react?color=9E1FAA" alt="npm" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT" /></a>
   <a href="https://developer.usewarp.net"><img src="https://img.shields.io/badge/docs-developer.usewarp.net-9E1FAA" alt="Docs" /></a>
 </p>
@@ -32,23 +32,23 @@ Your server creates a checkout session with your secret key and returns its `che
 - Safe under React StrictMode: one iframe, one `fetchCheckoutUrl` call per mount
 - Works with Next.js App Router and server rendering (the package is a client module)
 - Typed callbacks for ready, status, complete, cancel, return and errors
-- Built on [@usewarp/js](https://github.com/WarpCompany/warp-js); React 18 and 19
+- Built on [@warpfi/js](https://github.com/WarpCompany/warp-js); React 18 and 19
 
 ## Installation
 
 Requirements: React 18 or later.
 
 ```bash
-npm install @usewarp/react
+npm install @warpfi/react
 ```
 
 ## Usage
 
-Create the session on your server. This Next.js route handler uses [@usewarp/node](https://github.com/WarpCompany/warp-node) and takes the amount from your own records, never from the browser:
+Create the session on your server. This Next.js route handler uses [@warpfi/node](https://github.com/WarpCompany/warp-node) and takes the amount from your own records, never from the browser:
 
 ```ts
 // app/api/checkout/route.ts
-import Warp from '@usewarp/node'
+import Warp from '@warpfi/node'
 
 const warp = new Warp(process.env.WARP_SECRET_KEY!)
 
@@ -74,7 +74,7 @@ Then render the checkout in a client component:
 // app/checkout/checkout.tsx
 'use client'
 
-import { WarpCheckout } from '@usewarp/react'
+import { WarpCheckout } from '@warpfi/react'
 import { useRouter } from 'next/navigation'
 
 async function createCheckout(orderId: string): Promise<string> {
@@ -111,7 +111,7 @@ export function Checkout({ orderId }: { orderId: string }) {
 ```tsx
 'use client'
 
-import { PayWithWarpButton } from '@usewarp/react'
+import { PayWithWarpButton } from '@warpfi/react'
 // createCheckout() is the helper from the Usage example above.
 
 export function BuyButton({ orderId }: { orderId: string }) {
@@ -147,7 +147,7 @@ Browsers only allow popups opened directly from a click. The button opens the wi
 ```tsx
 'use client'
 
-import { useWarpCheckout } from '@usewarp/react'
+import { useWarpCheckout } from '@warpfi/react'
 // createCheckout() is the helper from the Usage example above.
 
 export function CustomCheckout({ orderId }: { orderId: string }) {
@@ -224,9 +224,9 @@ Events from the checkout (`onStatus`, `onComplete`, `onCancel`, `onReturn`) are 
 | `WarpCheckout` | Inline embedded checkout |
 | `PayWithWarpButton` | Button that opens the checkout in a modal, a popup or by redirecting |
 | `useWarpCheckout(options)` | Returns `{ openModal, openPopup, close, status, sessionId, isOpen, isLoading, error }` |
-| `WarpCheckoutError` | Error class with a `code`, re-exported from `@usewarp/js` |
+| `WarpCheckoutError` | Error class with a `code`, re-exported from `@warpfi/js` |
 | `DEFAULT_CHECKOUT_ORIGIN` | `https://checkout.usewarp.net` |
-| `CheckoutStatus`, `CheckoutTheme`, `CheckoutOptions`, `CheckoutInstance` | Types re-exported from `@usewarp/js` |
+| `CheckoutStatus`, `CheckoutTheme`, `CheckoutOptions`, `CheckoutInstance` | Types re-exported from `@warpfi/js` |
 | `WarpCheckoutProps`, `PayWithWarpButtonProps`, `PayWithWarpMode`, `UseWarpCheckoutOptions`, `UseWarpCheckoutResult`, `WarpCheckoutCallbacks` | Prop and option types |
 
 ## Documentation
@@ -249,13 +249,13 @@ npm test
 npm run build
 ```
 
-Until `@usewarp/js` is published to npm, clone [warp-js](https://github.com/WarpCompany/warp-js) next to this repository, build it, and install it with `npm install --no-save ../warp-js` instead of `npm install`.
+Until `@warpfi/js` is published to npm, clone [warp-js](https://github.com/WarpCompany/warp-js) next to this repository, build it, and install it with `npm install --no-save ../warp-js` instead of `npm install`.
 
 ## Project structure
 
 ```
 src/            Components, hook and shared callback helpers
-test/           Vitest tests with a mocked @usewarp/js
+test/           Vitest tests with a mocked @warpfi/js
 ```
 
 ## Contributing

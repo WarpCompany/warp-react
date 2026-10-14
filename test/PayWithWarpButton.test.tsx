@@ -1,11 +1,11 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { openCheckoutModal, openCheckoutPopup } from '@usewarp/js'
+import { openCheckoutModal, openCheckoutPopup } from '@warpfi/js'
 import { PayWithWarpButton } from '../src'
 import { navigateTo } from '../src/navigate'
 import { CHECKOUT_URL, calls, flush } from './mockWarpJs'
 
-vi.mock('@usewarp/js', async () => (await import('./mockWarpJs')).createWarpJsMock())
+vi.mock('@warpfi/js', async () => (await import('./mockWarpJs')).createWarpJsMock())
 vi.mock('../src/navigate', () => ({ navigateTo: vi.fn() }))
 
 const modal = vi.mocked(openCheckoutModal)
